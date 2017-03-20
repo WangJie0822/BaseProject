@@ -2,7 +2,7 @@ package com.example.wj.baseproject.dagger.module;
 
 import android.support.v4.app.Fragment;
 
-import com.example.wj.baseproject.BlankFragment;
+import com.example.wj.baseproject.fragment.MoviesHighestRatedFragment;
 import com.example.wj.baseproject.dagger.sub.fragment.BlankFragmentSub;
 
 import dagger.Binds;
@@ -21,7 +21,7 @@ public abstract class FragmentModule {
 
     @Binds
     @IntoMap
-    @FragmentKey(BlankFragment.class)
+    @FragmentKey(MoviesHighestRatedFragment.class)
     abstract AndroidInjector.Factory<? extends Fragment>
     bindBlankFragment(BlankFragmentSub.Builder builder);
 }

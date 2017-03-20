@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'me.tatarka.retrolambda'
 
 android {
     compileSdkVersion 25
@@ -17,6 +18,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    compileOptions { // JDK版本
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
     dataBinding { // 开启DataBinding
         enabled true
     }
@@ -28,15 +33,25 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 
-    // v7支持包
-    // dagger2
-    // Logger日志打印
-    //
+    /* v7支持包 */
     compile 'com.android.support:appcompat-v7:25.2.0'
+    /* RecyclerView */
+    compile 'com.android.support:recyclerview-v7:25.2.0'
+    /* dagger2 */
     compile 'com.google.dagger:dagger-android-support:2.10-rc4'
-    compile 'com.orhanobut:logger:1.15'
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    compile 'com.android.support:support-v4:25.2.0'
-    testCompile 'junit:junit:4.12'
     annotationProcessor 'com.google.dagger:dagger-compiler:2.10-rc4'
+    /* Logger日志打印 */
+    compile 'com.orhanobut:logger:1.15'
+    /* OkHttp + Retrofit + RxJava + RxAndroid */
+    compile 'com.squareup.okhttp3:logging-interceptor:3.6.0'
+    compile 'com.squareup.retrofit2:retrofit:2.2.0'
+    compile 'com.squareup.retrofit2:adapter-rxjava:2.2.0'
+    compile 'com.squareup.retrofit2:converter-gson:2.2.0'
+    compile 'io.reactivex:rxjava:1.2.7'
+    compile 'io.reactivex:rxandroid:1.1.0'
+    /* Glide */
+    compile 'com.github.bumptech.glide:glide:3.7.0'
+    /* */
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    testCompile 'junit:junit:4.12'
 }
