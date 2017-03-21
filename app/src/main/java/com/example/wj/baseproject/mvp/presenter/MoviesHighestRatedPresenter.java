@@ -19,7 +19,6 @@ public class MoviesHighestRatedPresenter extends BaseMVPPresenter<MoviesHighestR
     @Inject
     MoviesHighestRatedPresenter() {
         super();
-        mModule = new MoviesModule();
     }
 
     public void getHighestRatedMovies() {
@@ -41,5 +40,4 @@ public class MoviesHighestRatedPresenter extends BaseMVPPresenter<MoviesHighestR
 
         addSub(sub);
     }
-
 }

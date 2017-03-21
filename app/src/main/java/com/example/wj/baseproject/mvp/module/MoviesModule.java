@@ -4,6 +4,8 @@ import com.example.wj.baseproject.mvp.bean.MoviesListBean;
 import com.example.wj.baseproject.rx.RXClientGenerator;
 import com.example.wj.baseproject.rx.RxUrlDefinition;
 
+import javax.inject.Inject;
+
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
@@ -15,6 +17,11 @@ import rx.schedulers.Schedulers;
  * @author 王杰
  */
 public class MoviesModule {
+
+    @Inject
+    MoviesModule() {
+
+    }
 
     /**
      * 获取评价最高电影

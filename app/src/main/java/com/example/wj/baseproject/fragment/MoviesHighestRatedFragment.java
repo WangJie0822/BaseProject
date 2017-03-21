@@ -2,7 +2,6 @@ package com.example.wj.baseproject.fragment;
 
 
 import android.databinding.DataBindingUtil;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -22,7 +21,7 @@ import java.util.ArrayList;
 
 
 /**
- * A simple {@link Fragment} subclass.
+ * 高评分电影
  */
 public class MoviesHighestRatedFragment extends BaseFragment<MoviesHighestRatedPresenter, FragmentMoviesHighestRatedBinding>
         implements MoviesHighestRatedView {
@@ -56,7 +55,7 @@ public class MoviesHighestRatedFragment extends BaseFragment<MoviesHighestRatedP
         adapter.notifyDataSetChanged();
     }
 
-    class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder>{
+    class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {

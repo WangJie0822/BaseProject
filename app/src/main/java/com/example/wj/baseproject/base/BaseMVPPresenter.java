@@ -18,6 +18,7 @@ public class BaseMVPPresenter<V extends BaseMVPView, M> {
     /** View对象 */
     protected V mView;
     /** Module对象 */
+    @Inject
     protected M mModule;
 
     /** Rx声明周期管理 */

@@ -5,10 +5,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.example.wj.baseproject.fragment.MoviesHighestRatedFragment;
 import com.example.wj.baseproject.R;
 import com.example.wj.baseproject.base.BaseActivity;
 import com.example.wj.baseproject.databinding.ActivityMainBinding;
+import com.example.wj.baseproject.fragment.MoviesHighestRatedFragment;
 import com.example.wj.baseproject.mvp.presenter.BlankPresenter;
 
 import java.util.ArrayList;
@@ -25,6 +25,15 @@ public class MainActivity extends BaseActivity<BlankPresenter, ActivityMainBindi
         mData = new ArrayList<>();
         mData.add(new MoviesHighestRatedFragment());
         mBinding.vp.setAdapter(new MyAdapter(getSupportFragmentManager()));
+    }
+
+    @Override
+    protected void initToolbar() {
+
+//        toolbar.setVisibility(View.VISIBLE);
+        setSupportActionBar(toolbar);
+
+        getSupportActionBar().setTitle("高评分电影");
     }
 
     private class MyAdapter extends FragmentPagerAdapter {
