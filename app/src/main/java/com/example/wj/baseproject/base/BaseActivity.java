@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -41,6 +42,7 @@ public abstract class BaseActivity<P extends BaseMVPPresenter, B extends ViewDat
     protected View mRootView;
 
     protected Toolbar toolbar;
+    protected ActionBar titleBar;
     protected FrameLayout flContent;
 
     @Override
@@ -94,6 +96,15 @@ public abstract class BaseActivity<P extends BaseMVPPresenter, B extends ViewDat
     }
 
     /**
+     * 显示标题栏
+     */
+    protected void showTitle() {
+        toolbar.setVisibility(View.VISIBLE);
+        setSupportActionBar(toolbar);
+        titleBar = getSupportActionBar();
+    }
+
+    /**
      * 初始化根布局
      */
     protected void initRootView() {
@@ -110,7 +121,7 @@ public abstract class BaseActivity<P extends BaseMVPPresenter, B extends ViewDat
     protected void initStatusBar() {
         int mAlpha = 0;
         //noinspection deprecation
-        StatusBarUtil.setColor(this, getResources().getColor(R.color.colorTheme), mAlpha);
+        StatusBarUtil.setColor(this, getResources().getColor(R.color.colorPrimary), mAlpha);
     }
 
     /**

@@ -25,6 +25,10 @@ android {
     dataBinding { // 开启DataBinding
         enabled true
     }
+
+    configurations.all {
+        resolutionStrategy.force 'com.google.code.findbugs:jsr305:1.3.9'
+    }
 }
 
 dependencies {
@@ -32,14 +36,16 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
+    /* */
+    testCompile 'junit:junit:4.12'
 
     /* v7支持包 */
     compile 'com.android.support:appcompat-v7:25.2.0'
     /* RecyclerView */
     compile 'com.android.support:recyclerview-v7:25.2.0'
     /* dagger2 */
-    compile 'com.google.dagger:dagger-android-support:2.10-rc4'
-    annotationProcessor 'com.google.dagger:dagger-compiler:2.10-rc4'
+    compile 'com.google.dagger:dagger-android-support:2.10'
+    annotationProcessor 'com.google.dagger:dagger-compiler:2.10'
     /* Logger日志打印 */
     compile 'com.orhanobut:logger:1.15'
     /* OkHttp + Retrofit + RxJava + RxAndroid */
@@ -51,7 +57,5 @@ dependencies {
     compile 'io.reactivex:rxandroid:1.1.0'
     /* Glide */
     compile 'com.github.bumptech.glide:glide:3.7.0'
-    /* */
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    testCompile 'junit:junit:4.12'
 }

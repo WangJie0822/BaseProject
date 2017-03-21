@@ -2,7 +2,9 @@ package com.example.wj.baseproject.dagger.module;
 
 import android.app.Activity;
 
+import com.example.wj.baseproject.activity.Main2Activity;
 import com.example.wj.baseproject.activity.MainActivity;
+import com.example.wj.baseproject.dagger.sub.activity.Main2ActivitySub;
 import com.example.wj.baseproject.dagger.sub.activity.MainActivitySub;
 
 import dagger.Binds;
@@ -16,7 +18,7 @@ import dagger.multibindings.IntoMap;
  *
  * @author 王杰
  */
-@Module(subcomponents = {MainActivitySub.class})
+@Module(subcomponents = {MainActivitySub.class, Main2ActivitySub.class})
 public abstract class ActivityModule {
 
     @Binds
@@ -24,4 +26,10 @@ public abstract class ActivityModule {
     @ActivityKey(MainActivity.class)
     abstract AndroidInjector.Factory<? extends Activity>
     bindMainActivity(MainActivitySub.Builder builder);
+
+    @Binds
+    @IntoMap
+    @ActivityKey(Main2Activity.class)
+    abstract AndroidInjector.Factory<? extends Activity>
+    bindMain2Activity(Main2ActivitySub.Builder builder);
 }
