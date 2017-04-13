@@ -1,23 +1,22 @@
 package com.example.wj.baseproject.fragment;
 
 
-import android.databinding.DataBindingUtil;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
 import com.example.wj.baseproject.R;
+import com.example.wj.baseproject.adapter.MoviesListAdapter;
 import com.example.wj.baseproject.base.BaseFragment;
 import com.example.wj.baseproject.databinding.FragmentMoviesHighestRatedBinding;
-import com.example.wj.baseproject.databinding.ItemBinding;
+import com.example.wj.baseproject.handler.MoviesItemHandler;
 import com.example.wj.baseproject.mvp.bean.MoviesBean;
 import com.example.wj.baseproject.mvp.bean.MoviesListBean;
 import com.example.wj.baseproject.mvp.presenter.MoviesHighestRatedPresenter;
 import com.example.wj.baseproject.mvp.view.MoviesHighestRatedView;
 
 import java.util.ArrayList;
+
+import javax.inject.Inject;
 
 
 /**
@@ -27,10 +26,12 @@ public class MoviesHighestRatedFragment extends BaseFragment<MoviesHighestRatedP
         implements MoviesHighestRatedView {
 
     ArrayList<MoviesBean> mData;
-    private MyAdapter adapter;
+
+    @Inject
+    MoviesListAdapter adapter;
 
     @Override
-    protected int initLayoutResId() {
+    protected int layoutResId() {
         return R.layout.fragment_movies_highest_rated;
     }
 
@@ -40,12 +41,13 @@ public class MoviesHighestRatedFragment extends BaseFragment<MoviesHighestRatedP
         presenter.onAttach(this);
 
         mData = new ArrayList<>();
+        adapter.bindData(mData);
+        adapter.bindHandler(new HighestRateHandler());
+
         mBinding.rv.setLayoutManager(new GridLayoutManager(mContext, 2));
-        adapter = new MyAdapter();
         mBinding.rv.setAdapter(adapter);
 
         presenter.getHighestRatedMovies();
-
     }
 
     @Override
@@ -55,37 +57,11 @@ public class MoviesHighestRatedFragment extends BaseFragment<MoviesHighestRatedP
         adapter.notifyDataSetChanged();
     }
 
-    class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
-
+    private class HighestRateHandler implements MoviesItemHandler{
         @Override
-        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            ItemBinding binding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.item, parent, false);
-            return new ViewHolder(binding);
-        }
-
-        @Override
-        public void onBindViewHolder(ViewHolder holder, int position) {
-            holder.onBind(mData.get(position));
-        }
-
-        @Override
-        public int getItemCount() {
-            return mData.size();
-        }
-
-        class ViewHolder extends RecyclerView.ViewHolder {
-
-            ItemBinding binding;
-
-            ViewHolder(ItemBinding binding) {
-                super(binding.getRoot());
-                this.binding = binding;
-            }
-
-            void onBind(MoviesBean movies) {
-                binding.setMovies(movies);
-                binding.executePendingBindings();
-            }
+        public void onMoviesItemClick(MoviesBean item) {
+            // TODO
+            showToast("---");
         }
     }
 }

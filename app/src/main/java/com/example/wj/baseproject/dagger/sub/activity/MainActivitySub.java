@@ -1,6 +1,6 @@
 package com.example.wj.baseproject.dagger.sub.activity;
 
-import com.example.wj.baseproject.activity.MainActivity;
+import com.example.wj.baseproject.mvp.activity.MainActivity;
 
 import dagger.Subcomponent;
 import dagger.android.AndroidInjector;

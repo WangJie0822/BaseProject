@@ -5,12 +5,17 @@
     <data>
 
         <variable
-            name="movies"
+            name="item"
             type="com.example.wj.baseproject.mvp.bean.MoviesBean"/>
+
+        <variable
+            name="handler"
+            type="com.example.wj.baseproject.handler.MoviesItemHandler"/>
     </data>
 
     <RelativeLayout
         android:layout_width="match_parent"
+        android:onClick="@{() -> handler.onMoviesItemClick(item)}"
         android:layout_height="320dp"
         android:layout_margin="1dp">
 
@@ -19,7 +24,7 @@
             android:layout_height="match_parent"
             android:contentDescription="@null"
             android:scaleType="centerCrop"
-            app:imgUrl="@{movies.poster_path}"/>
+            app:imgUrl="@{item.poster_path}"/>
 
         <View
             android:id="@+id/title_background"
@@ -37,7 +42,7 @@
             android:gravity="center"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
-            android:text="@{movies.title}"
+            android:text="@{item.title}"
             android:textColor="@android:color/white"
             android:textSize="12sp"/>
 

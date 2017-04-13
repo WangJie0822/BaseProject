@@ -2,8 +2,8 @@ package com.example.wj.baseproject.dagger.module;
 
 import android.app.Activity;
 
-import com.example.wj.baseproject.activity.Main2Activity;
-import com.example.wj.baseproject.activity.MainActivity;
+import com.example.wj.baseproject.mvp.activity.Main2Activity;
+import com.example.wj.baseproject.mvp.activity.MainActivity;
 import com.example.wj.baseproject.dagger.sub.activity.Main2ActivitySub;
 import com.example.wj.baseproject.dagger.sub.activity.MainActivitySub;
 

@@ -1,4 +1,4 @@
-package com.example.wj.baseproject.activity;
+package com.example.wj.baseproject.mvp.activity;
 
 import android.content.Intent;
 import android.os.Bundle;

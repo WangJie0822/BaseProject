@@ -3,6 +3,7 @@ package com.example.wj.baseproject.base;
 import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
 import android.os.Bundle;
+import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v7.widget.Toolbar;
@@ -55,7 +56,7 @@ public abstract class BaseFragment<P extends BaseMVPPresenter, B extends ViewDat
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         initRootView();
         initToolbar();
-        View childView = View.inflate(mContext, initLayoutResId(), null);
+        View childView = View.inflate(mContext, layoutResId(), null);
         flContent.removeAllViews();
         flContent.addView(childView);
         mBinding = DataBindingUtil.bind(childView);
@@ -105,7 +106,8 @@ public abstract class BaseFragment<P extends BaseMVPPresenter, B extends ViewDat
      *
      * @return 布局id
      */
-    protected abstract int initLayoutResId();
+    @LayoutRes
+    protected abstract int layoutResId();
 
     /**
      * 初始化布局
