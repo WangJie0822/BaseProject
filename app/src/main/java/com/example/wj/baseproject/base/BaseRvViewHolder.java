@@ -26,7 +26,7 @@ public abstract class BaseRvViewHolder<DB extends ViewDataBinding, B> extends Re
         mBinding = binding;
     }
 
-    void bindData(B item) {
+    protected void bindData(B item) {
         mBinding.setVariable(BR.item, item);
         mBinding.executePendingBindings();
     }

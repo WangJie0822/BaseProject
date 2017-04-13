@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto">
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -15,27 +16,26 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:onClick="@{() -> handler.onMoviesItemClick(item)}"
         android:layout_height="320dp"
-        android:layout_margin="1dp">
+        android:layout_margin="1dp"
+        android:onClick="@{() -> handler.onMoviesItemClick(item)}">
 
         <ImageView
+            android:id="@+id/iv"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:contentDescription="@null"
-            android:scaleType="centerCrop"
-            app:imgUrl="@{item.poster_path}"/>
+            android:scaleType="centerCrop"/>
 
         <View
-            android:id="@+id/title_background"
+            android:id="@+id/v"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:layout_alignParentBottom="true"
             android:alpha="0.8"
-            android:background="@color/colorPrimaryDark"/>
+            tools:background="@color/colorPrimaryDark"/>
 
         <TextView
-            android:id="@+id/movie_name"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:layout_alignParentBottom="true"
