@@ -1,25 +1,27 @@
 package com.example.wj.baseproject.base;
 
-import android.support.annotation.StringRes;
-
 /**
  * MVP View基类
- *
- * @author 王杰
  */
 public interface BaseMVPView {
 
     /**
-     * Toast提示
-     *
-     * @param str 提示文本
+     * 网络请求结束
      */
-    void showToast(String str);
+    void onNetFinished();
 
     /**
-     * Toast提示
-     *
-     * @param strResId 提示文本id
+     * 网络故障
      */
-    void showToast(@StringRes int strResId);
+    void onNetError();
+
+    /**
+     * 无数据
+     */
+    void onNoData();
+
+    /**
+     * 加载中
+     */
+    void onLoading();
 }

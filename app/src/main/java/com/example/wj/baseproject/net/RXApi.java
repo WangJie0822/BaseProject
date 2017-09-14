@@ -1,10 +1,10 @@
-package com.example.wj.baseproject.rx;
+package com.example.wj.baseproject.net;
 
 import com.example.wj.baseproject.mvp.bean.MoviesListBean;
 
+import io.reactivex.Observable;
 import retrofit2.http.GET;
 import retrofit2.http.Url;
-import rx.Observable;
 
 /**
  * 网络请求方法体

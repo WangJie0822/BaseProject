@@ -4,9 +4,9 @@ import android.app.Activity;
 import android.app.Application;
 import android.support.v4.app.Fragment;
 
-import com.example.wj.baseproject.BuildConfig;
+import com.example.wj.baseproject.dagger.module.MainModule;
 import com.example.wj.baseproject.dagger.sub.application.DaggerApplicationSub;
-import com.orhanobut.logger.LogLevel;
+import com.orhanobut.logger.AndroidLogAdapter;
 import com.orhanobut.logger.Logger;
 
 import javax.inject.Inject;
@@ -20,46 +20,38 @@ import dagger.android.support.HasDispatchingSupportFragmentInjector;
  *
  * @author 王杰
  */
-public class MyApplication extends Application implements HasDispatchingActivityInjector, HasDispatchingSupportFragmentInjector {
+public class MyApplication extends Application
+        implements HasDispatchingActivityInjector,
+        HasDispatchingSupportFragmentInjector {
 
     /** MyApplication示例对象 */
-    private MyApplication INSTANCE;
+    private static MyApplication instance;
+
     /** Dagger2 Activity Injector */
     @Inject
     DispatchingAndroidInjector<Activity> activityInjector;
-    /** Dagger2 Fragment Injector*/
+    /** Dagger2 Fragment Injector */
     @Inject
     DispatchingAndroidInjector<Fragment> fragmentInjector;
+
+    public static MyApplication getInstance() {
+        return instance;
+    }
 
     @Override
     public void onCreate() {
         super.onCreate();
 
-        INSTANCE = this;
+        instance = this;
 
-        initLogger();
+        // 初始化Logger
+        Logger.addLogAdapter(new AndroidLogAdapter());
 
-        DaggerApplicationSub.create().inject(INSTANCE);
-    }
-
-    /**
-     * 初始化Logger
-     */
-    private void initLogger() {
-
-        Logger.init()
-                .methodCount(5) // 显示方法层级数
-                .logLevel(BuildConfig.DEBUG ?  // 判断是测试包还是正式包，设置是否打印日志
-                        LogLevel.FULL : LogLevel.NONE); // FULL打印、NONE不打印
-    }
-
-    /**
-     * 获取MyApplication示例对象
-     *
-     * @return MyApplication实例对象
-     */
-    public MyApplication INSTANCE() {
-        return INSTANCE;
+        DaggerApplicationSub
+                .builder()
+                .mainModule(new MainModule(this))
+                .build()
+                .inject(instance);
     }
 
     @Override

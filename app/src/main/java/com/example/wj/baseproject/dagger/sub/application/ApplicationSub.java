@@ -1,6 +1,6 @@
 package com.example.wj.baseproject.dagger.sub.application;
 
-import com.example.wj.baseproject.BaseModule;
+import com.example.wj.baseproject.dagger.module.MainModule;
 import com.example.wj.baseproject.application.MyApplication;
 import com.example.wj.baseproject.dagger.module.ActivityModule;
 import com.example.wj.baseproject.dagger.module.FragmentModule;
@@ -15,7 +15,7 @@ import dagger.Component;
  * @author 王杰
  */
 @Singleton
-@Component(modules = {ActivityModule.class, FragmentModule.class, BaseModule.class})
+@Component(modules = {ActivityModule.class, FragmentModule.class, MainModule.class})
 public interface ApplicationSub {
 
     void inject(MyApplication app);

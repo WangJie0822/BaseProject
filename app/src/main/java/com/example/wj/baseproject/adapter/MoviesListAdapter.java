@@ -2,19 +2,20 @@ package com.example.wj.baseproject.adapter;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.support.annotation.Nullable;
 import android.support.v7.graphics.Palette;
 
-import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.example.wj.baseproject.R;
 import com.example.wj.baseproject.base.BaseRvAdapter;
 import com.example.wj.baseproject.base.BaseRvViewHolder;
 import com.example.wj.baseproject.databinding.ItemBinding;
+import com.example.wj.baseproject.glide.GlideApp;
 import com.example.wj.baseproject.handler.MoviesItemHandler;
 import com.example.wj.baseproject.mvp.bean.MoviesBean;
-import com.example.wj.baseproject.rx.RxUrlDefinition;
+import com.example.wj.baseproject.net.UrlDefinition;
 
 import javax.inject.Inject;
 
@@ -50,20 +51,22 @@ public class MoviesListAdapter extends BaseRvAdapter
         protected void bindData(MoviesBean item) {
             super.bindData(item);
             Context context = mBinding.iv.getContext();
-            Glide.with(context)
-                    .load(RxUrlDefinition.POSTER_PATH.concat(item.getPoster_path()))
+            GlideApp.with(context)
                     .asBitmap()
-                    .diskCacheStrategy(DiskCacheStrategy.RESULT)
+                    .load(UrlDefinition.POSTER_PATH.concat(item.getPoster_path()))
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(new BitmapImageViewTarget(mBinding.iv) {
+
                         @Override
-                        public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-                            super.onResourceReady(resource, glideAnimation);
+                        public void onResourceReady(Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                            super.onResourceReady(resource, transition);
                             Palette.from(resource).generate(palette ->
                                     mBinding.v.setBackgroundColor(
                                             palette.getVibrantColor(
                                                     context.getResources().getColor(
                                                             R.color.colorPrimaryDark))));
                         }
+
                     });
         }
     }

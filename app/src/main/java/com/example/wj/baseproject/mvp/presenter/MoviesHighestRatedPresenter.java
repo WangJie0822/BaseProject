@@ -1,13 +1,14 @@
 package com.example.wj.baseproject.mvp.presenter;
 
 import com.example.wj.baseproject.base.BaseMVPPresenter;
-import com.example.wj.baseproject.mvp.view.MoviesHighestRatedView;
 import com.example.wj.baseproject.mvp.module.MoviesModule;
+import com.example.wj.baseproject.mvp.view.MoviesHighestRatedView;
+import com.example.wj.baseproject.util.ToastUtil;
 import com.orhanobut.logger.Logger;
 
 import javax.inject.Inject;
 
-import rx.Subscription;
+import io.reactivex.disposables.Disposable;
 
 /**
  * 主界面Presenter
@@ -23,21 +24,21 @@ public class MoviesHighestRatedPresenter extends BaseMVPPresenter<MoviesHighestR
 
     public void getHighestRatedMovies() {
 
-        Subscription sub = mModule.getHighestRatedMovies(
+        Disposable disposable = mModule.getHighestRatedMovies(
                 data -> {
 
                     if (data == null) {
-                        mView.showToast("The movies data is empty");
+                        ToastUtil.show("The movies data is empty");
                         return;
                     }
 
                     mView.notifyData(data);
 
                 }, throwable -> {
-                    mView.showToast("Net Error!");
+                    ToastUtil.show("Net Error!");
                     Logger.e(throwable, "net_error");
                 });
 
-        addSub(sub);
+        addDisposable(disposable);
     }
 }

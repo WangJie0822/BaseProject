@@ -1,13 +1,10 @@
-package com.example.wj.baseproject.rx;
+package com.example.wj.baseproject.net;
 
-import android.text.TextUtils;
+import android.support.annotation.NonNull;
 
-import com.example.wj.baseproject.BuildConfig;
+import com.example.wj.baseproject.util.StringUtil;
+import com.orhanobut.logger.BuildConfig;
 import com.orhanobut.logger.Logger;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -28,26 +25,23 @@ import okio.Buffer;
 import okio.BufferedSource;
 
 /**
- * 网络请求拦截器，添加公共参数，打印网络请求相关信息
+ * 网络请求拦截器，打印网络请求相关信息
+ *
  * <p>测试环境时，打印返回数据，会造成多次请求
- * <p>versionName : 版本名</p>
- * <p>platform : 应用平台</p>
- * <p>imei : 手机IMEI</p>
  */
-class NetInterceptor implements Interceptor {
+public class LogInterceptor implements Interceptor {
 
     private static final Charset UTF8 = Charset.forName("UTF-8");
 
     /**
      * 构造方法
      */
-    NetInterceptor() {
+    public LogInterceptor() {
     }
 
     @Override
-    public Response intercept(Chain chain) throws IOException {
+    public Response intercept(@NonNull Chain chain) throws IOException {
 
-        // 新的请求
         Request request = chain.request();
 
         if (!BuildConfig.DEBUG) { // 正式环境直接返回，不打印日志
@@ -99,18 +93,18 @@ class NetInterceptor implements Interceptor {
             }
 
             sb.append("\n");
-            sb.append(buffer.readString(charset)).append("\n");
+            if (charset != null) {
+                sb.append(buffer.readString(charset)).append("\n");
+            }
 
             sb.append("--> END ").append(request.method()).append(" (").append(requestBody.contentLength()).append("-byte body)").append("\n");
         }
 
-
+        // 是否打印响应体，一些接口只能调用一次
         if (!showResponse(request.url().toString())) {
-
             Logger.d(sb.toString());
             return chain.proceed(request);
         }
-
 
         long startNs = System.nanoTime();
 
@@ -119,57 +113,61 @@ class NetInterceptor implements Interceptor {
         long tookMs = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startNs);
 
         ResponseBody responseBody = response.body();
-        long contentLength = responseBody.contentLength();
-        String bodySize = contentLength != -1 ? contentLength + "-byte" : "unknown-length";
-        sb.append("<-- ").append(response.code()).append(" ").append(response.message()).append(" ")
-                .append(response.request().url()).append(" (").append(tookMs).append("ms, ")
-                .append(bodySize).append(" body)").append("\n");
+        if (responseBody != null) {
+            long contentLength = responseBody.contentLength();
+            String bodySize = contentLength != -1 ? contentLength + "-byte" : "unknown-length";
+            sb.append("<-- ").append(response.code()).append(" ").append(response.message()).append(" ")
+                    .append(response.request().url()).append(" (").append(tookMs).append("ms, ")
+                    .append(bodySize).append(" body)").append("\n");
 
-        Headers headers1 = response.headers();
-        for (int i = 0, count = headers1.size(); i < count; i++) {
-            sb.append(headers1.name(i)).append(": ").append(headers1.value(i)).append("\n");
-        }
+            Headers headers1 = response.headers();
+            for (int i = 0, count = headers1.size(); i < count; i++) {
+                sb.append(headers1.name(i)).append(": ").append(headers1.value(i)).append("\n");
+            }
 
-        if (!HttpHeaders.hasBody(response)) {
-            sb.append("<-- END HTTP").append("\n");
-        } else if (bodyEncoded(response.headers())) {
-            sb.append("<-- END HTTP (encoded body omitted)").append("\n");
-        } else {
-            BufferedSource source = responseBody.source();
-            source.request(Long.MAX_VALUE); // Buffer the entire body.
-            Buffer buffer = source.buffer();
+            if (!HttpHeaders.hasBody(response)) {
+                sb.append("<-- END HTTP").append("\n");
+            } else if (bodyEncoded(response.headers())) {
+                sb.append("<-- END HTTP (encoded body omitted)").append("\n");
+            } else {
+                BufferedSource source = responseBody.source();
+                source.request(Long.MAX_VALUE); // Buffer the entire body.
+                Buffer buffer = source.buffer();
 
-            Charset charset = UTF8;
-            MediaType contentType = responseBody.contentType();
-            if (contentType != null) {
-                try {
-                    charset = contentType.charset(UTF8);
-                } catch (UnsupportedCharsetException e) {
+                Charset charset = UTF8;
+                MediaType contentType = responseBody.contentType();
+                if (contentType != null) {
+                    try {
+                        charset = contentType.charset(UTF8);
+                    } catch (UnsupportedCharsetException e) {
+                        sb.append("\n");
+                        sb.append("Couldn't decode the response body; charset is likely malformed.").append("\n");
+                        sb.append("<-- END HTTP").append("\n");
+
+                        return response;
+                    }
+                }
+
+                if (contentLength != 0) {
                     sb.append("\n");
-                    sb.append("Couldn't decode the response body; charset is likely malformed.").append("\n");
-                    sb.append("<-- END HTTP").append("\n");
-
-                    return response;
+                    if (charset != null) {
+                        String json = buffer.clone().readString(charset);
+                        sb.append(json).append("\n\n");
+                        String str = StringUtil.jsonFormat(json);
+                        if (str.length() > 200) {
+                            String start = str.substring(0, 100);
+                            String end = str.substring(str.length() - 100);
+                            sb.append(start).append("\n")
+                                    .append("\nThe json was too long...\n\n")
+                                    .append(end).append("\n");
+                        } else {
+                            sb.append(str).append("\n");
+                        }
+                    }
                 }
-            }
 
-            if (contentLength != 0) {
-                sb.append("\n");
-                String json = buffer.clone().readString(charset);
-                sb.append(json).append("\n\n");
-                String str = jsonFormat(json);
-                if (str.length() > 200) {
-                    String start = str.substring(0, 100);
-                    String end = str.substring(str.length() - 100);
-                    sb.append(start).append("\n")
-                            .append("\nThe json was too long...\n\n")
-                            .append(end).append("\n");
-                } else {
-                    sb.append(str).append("\n");
-                }
+                sb.append("<-- END HTTP (").append(buffer.size()).append("-byte body)").append("\n");
             }
-
-            sb.append("<-- END HTTP (").append(buffer.size()).append("-byte body)").append("\n");
         }
 
         Logger.d(sb.toString());
@@ -187,43 +185,18 @@ class NetInterceptor implements Interceptor {
      * <p>打印返回数据会造成多次请求，部分接口不能多次请求</p>
      *
      * @param url 请求url
-     * @return 是否打印
+     *
+     * @return 是否返回
      */
     private boolean showResponse(String url) {
 
         boolean showResponse = true;
 
-        return showResponse;
-    }
+        if (false) {
 
-    /**
-     * 将json字符串格式化后返回
-     *
-     * @param json json字符串
-     * @return 格式化后的字符串
-     */
-    public String jsonFormat(String json) {
-        if (TextUtils.isEmpty(json)) {
-            return "Empty/Null json content";
+            showResponse = false;
         }
-        try {
-            json = json.trim();
-            String message;
-            if (json.startsWith("{")) {
-                JSONObject jsonObject = new JSONObject(json);
-                message = jsonObject.toString(2);
-                return message;
-            } else if (json.startsWith("[")) {
-                JSONArray jsonArray = new JSONArray(json);
-                message = jsonArray.toString(2);
-                return message;
-            } else {
-                message = "Invalid Json";
-            }
-            return message;
-        } catch (JSONException e) {
-            Logger.e(e.getMessage());
-            return "Invalid Json";
-        }
+
+        return showResponse;
     }
 }

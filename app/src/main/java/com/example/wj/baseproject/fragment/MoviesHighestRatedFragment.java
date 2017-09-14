@@ -1,8 +1,6 @@
 package com.example.wj.baseproject.fragment;
 
-
 import android.support.v7.widget.GridLayoutManager;
-import android.view.View;
 
 import com.example.wj.baseproject.R;
 import com.example.wj.baseproject.adapter.MoviesListAdapter;
@@ -18,7 +16,6 @@ import java.util.ArrayList;
 
 import javax.inject.Inject;
 
-
 /**
  * 高评分电影
  */
@@ -31,12 +28,7 @@ public class MoviesHighestRatedFragment extends BaseFragment<MoviesHighestRatedP
     MoviesListAdapter adapter;
 
     @Override
-    protected int layoutResId() {
-        return R.layout.fragment_movies_highest_rated;
-    }
-
-    @Override
-    protected void initView(View childView) {
+    protected void initView() {
 
         presenter.onAttach(this);
 
@@ -57,11 +49,20 @@ public class MoviesHighestRatedFragment extends BaseFragment<MoviesHighestRatedP
         adapter.notifyDataSetChanged();
     }
 
-    private class HighestRateHandler implements MoviesItemHandler{
+    @Override
+    protected int bindView() {
+        return R.layout.fragment_movies_highest_rated;
+    }
+
+    @Override
+    protected void initTitleBar() {
+    }
+
+    private class HighestRateHandler implements MoviesItemHandler {
         @Override
         public void onMoviesItemClick(MoviesBean item) {
             // TODO
-            showToast("---");
+
         }
     }
 }

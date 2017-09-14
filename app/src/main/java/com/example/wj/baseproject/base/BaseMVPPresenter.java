@@ -1,75 +1,67 @@
 package com.example.wj.baseproject.base;
 
+
 import javax.inject.Inject;
 
-import rx.Subscription;
-import rx.subscriptions.CompositeSubscription;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 
 /**
- * MVP Presenter基类
+ * Presenter基类
  *
- * @param <V> MVP View 继承 {@link BaseMVPView}
- * @param <M> MVP Module
- *
- * @author 王杰
+ * @param <V> MVP View类型 继承{@link BaseMVPView}
+ * @param <M> MVP Module 继承{@link BaseMVPModule}
  */
-public class BaseMVPPresenter<V extends BaseMVPView, M> {
+public class BaseMVPPresenter<V extends BaseMVPView, M extends BaseMVPModule> {
 
-    /** View对象 */
     protected V mView;
-    /** Module对象 */
+
     @Inject
     protected M mModule;
 
-    /** Rx声明周期管理 */
-    private CompositeSubscription subscriptions;
+    private CompositeDisposable disposables;
 
-    @Inject
-    protected BaseMVPPresenter() {
-        subscriptions = new CompositeSubscription();
+    public BaseMVPPresenter() {
+        disposables = new CompositeDisposable();
     }
 
-    /**
-     * 绑定View
-     *
-     * @param view MVP View
-     */
     public void onAttach(V view) {
         mView = view;
     }
 
-    /**
-     * 解绑MVP View
-     */
     void onDetach() {
         mView = null;
     }
 
     /**
-     * 添加到生命周期管理
+     * 检查请求返回数据，并在登录状态异常时弹出提示
      *
-     * @param sub 订阅者对象
+     * @param data 返回数据
+     * @param <T>  返回数据类型
+     *
+     * @return 是否成功
      */
-    protected void addSub(Subscription sub) {
-        if (subscriptions == null) {
-            return;
-        }
+    protected <T extends BaseBean> boolean checkResponse(T data) {
 
-        if (sub != null) {
-            subscriptions.add(sub);
+        return true;
+    }
+
+    /**
+     * RxJava生命周期
+     */
+    protected void addDisposable(Disposable dis) {
+        if (dis != null) {
+            disposables.add(dis);
         }
     }
 
     /**
-     * 解绑订阅者
+     * 消费所有事件
      */
-    void unSubscribe() {
-        if (subscriptions == null) {
-            return;
-        }
-
-        if (subscriptions.hasSubscriptions()) {
-            subscriptions.unsubscribe();
+    void dispose() {
+        if (!disposables.isDisposed() && disposables.size() > 0) {
+            disposables.dispose();
         }
     }
+
 }
